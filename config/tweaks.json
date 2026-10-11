@@ -1903,5 +1903,204 @@
     "Type": "Button",
     "ButtonWidth": "300",
     "link": "https://winutil.christitus.com/code-reference/tweaks/performance-plans---not-for-laptops/removeultperf"
+  },
+  "WPFTweaksGameDVR": {
+    "Content": "Game DVR - Disable",
+    "Description": "WARNING: Disables background recording and the capture pipeline entirely. Games you have already recorded stay on disk, and removing your Xbox library saves or uninstalling will re-enable some of this on the next sign-in.",
+    "category": "Gaming Tweaks",
+    "panel": "1",
+    "registry": [
+      {
+        "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR",
+        "Name": "AllowGameDVR",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+        "Name": "AppCaptureEnabled",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+        "Name": "HistoricalCaptureEnabled",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKCU:\\System\\GameConfigStore",
+        "Name": "GameDVR_Enabled",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "1"
+      }
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/gaming-tweaks/gamedvr"
+  },
+  "WPFTweaksFSO": {
+    "Content": "Fullscreen Optimizations - Disable",
+    "Description": "WARNING: Forces classic exclusive fullscreen for games that request it. Some titles with borderless-window or multi-instance support behave worse in true fullscreen, and a few anti-cheat titles refuse to start.",
+    "category": "Gaming Tweaks",
+    "panel": "1",
+    "registry": [
+      {
+        "Path": "HKCU:\\System\\GameConfigStore",
+        "Name": "GameDVR_FSEBehaviorMode",
+        "Value": "2",
+        "Type": "DWord",
+        "OriginalValue": "0"
+      },
+      {
+        "Path": "HKCU:\\System\\GameConfigStore",
+        "Name": "GameDVR_HonorUserFSEBehaviorMode",
+        "Value": "1",
+        "Type": "DWord",
+        "OriginalValue": "0"
+      }
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/gaming-tweaks/fso"
+  },
+  "WPFToggleHAGS": {
+    "Content": "Hardware-Accelerated GPU Scheduling",
+    "Description": "WARNING: Lets the GPU schedule its own memory instead of the CPU. Needs a WDDM 2.7+ driver and a supported card, and takes effect only after a restart. Leave it off if a driver release notes frame as 'stutter fixed'.",
+    "category": "Gaming Tweaks",
+    "panel": "1",
+    "Type": "Toggle",
+    "registry": [
+      {
+        "Path": "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers",
+        "Name": "HwSchMode",
+        "Value": "2",
+        "Type": "DWord",
+        "OriginalValue": "1",
+        "DefaultState": "false"
+      }
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/gaming-tweaks/hags"
+  },
+  "WPFTweaksGameBar": {
+    "Content": "Xbox Game Bar - Disable",
+    "Description": "WARNING: Turns off the Game Bar overlay and its start panel. The key that makes Win+G and Win+A stop working is read at shell start, so sign out or restart Explorer after applying.",
+    "category": "Gaming Tweaks",
+    "panel": "1",
+    "registry": [
+      {
+        "Path": "HKCU:\\SOFTWARE\\Microsoft\\GameBar",
+        "Name": "UseNexusForGameBarEnabled",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKCU:\\SOFTWARE\\Microsoft\\GameBar",
+        "Name": "ShowStartupPanel",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      }
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/gaming-tweaks/gamebar"
+  },
+  "WPFToggleBluetoothLE": {
+    "Content": "Use Classic Bluetooth Audio Only",
+    "Description": "WARNING: Turns off Bluetooth LE Audio and falls back to Classic Bluetooth. Lower latency and better multi-device switching on older headsets, worse bandwidth on newer ones. Needs a restart, and only affects devices that support both.",
+    "category": "Hardware Tweaks",
+    "panel": "1",
+    "Type": "Toggle",
+    "registry": [
+      {
+        "Path": "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\BthAvctpSvc\\Parameters\\Bats",
+        "Name": "UserPrefersClassicAudio",
+        "Value": "1",
+        "Type": "DWord",
+        "OriginalValue": "0",
+        "DefaultState": "false"
+      }
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/hardware-tweaks/bluetoothle"
+  },
+  "WPFTweaksRecall": {
+    "Content": "Recall - Disable and Remove",
+    "Description": "WARNING: Removes the Recall optional component from the machine rather than just switching it off, and deletes any snapshots already saved on this PC. Restoring it needs the feature to download again from Windows Update.",
+    "category": "Hardware Tweaks",
+    "panel": "1",
+    "registry": [
+      {
+        "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI",
+        "Name": "AllowRecallEnablement",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI",
+        "Name": "DisableAIDataAnalysis",
+        "Value": "1",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      }
+    ],
+    "InvokeScript": [
+      "
+      $Recall = Get-WindowsOptionalFeature -Online -FeatureName \"Recall\" -ErrorAction SilentlyContinue
+
+      if ($null -eq $Recall) {
+          Write-Host \"Recall is not present on this system, nothing to remove\"
+      } elseif ($Recall.State -eq 'DisabledWithPayloadRemoved') {
+          Write-Host \"Recall was already removed from this system\"
+      } else {
+          Disable-WindowsOptionalFeature -Online -FeatureName \"Recall\" -Remove -NoRestart | Out-Null
+          Write-Host \"Recall removed from this system, restart to finish\" -ForegroundColor Green
+      }
+      "
+    ],
+    "UndoScript": [
+      "
+      Enable-WindowsOptionalFeature -Online -FeatureName \"Recall\" -NoRestart | Out-Null
+      Write-Host \"Recall re-enabled, restart to finish\"
+      "
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/hardware-tweaks/recall"
+  },
+  "WPFTweaksCopilot": {
+    "Content": "Microsoft Copilot - Disable",
+    "Description": "WARNING: Microsoft's own documentation marks TurnOffWindowsCopilot as near-term deprecated, and it only hides the taskbar button rather than removing the app. Copilot is still reachable from Search, the ms-copilot URI handler, and Edge. Removing the app itself is what the Windows AI tweak does.",
+    "category": "Essential Tweaks",
+    "panel": "1",
+    "registry": [
+      {
+        "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot",
+        "Name": "TurnOffWindowsCopilot",
+        "Value": "1",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKCU:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot",
+        "Name": "TurnOffWindowsCopilot",
+        "Value": "1",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Explorer",
+        "Name": "DisableCopilot",
+        "Value": "1",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      },
+      {
+        "Path": "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "Name": "ShowCopilotButton",
+        "Value": "0",
+        "Type": "DWord",
+        "OriginalValue": "<RemoveEntry>"
+      }
+    ],
+    "link": "https://winutil.christitus.com/code-reference/tweaks/essential-tweaks/copilot"
   }
 }
