@@ -98,7 +98,7 @@ function Get-GeneratedFromNote {
         [string]$SourceRelativePath
     )
 
-    $githubUrl = "https://github.com/ChrisTitusTech/winutil/blob/main/$SourceRelativePath"
+    $githubUrl = "https://github.com/pdlayer/WinUtilPP/blob/main/$SourceRelativePath"
     $note  = ":::note`r`n"
     $note += "This page is generated from [``$SourceRelativePath``]($githubUrl). Do not edit this page directly.`r`n"
     $note += ":::`r`n`r`n"
@@ -268,6 +268,8 @@ $documentedCategories = @(
     "Essential Tweaks",
     "z__Advanced Tweaks - CAUTION",
     "Customize Preferences",
+    "Gaming Tweaks",
+    "Hardware Tweaks",
     "Performance Plans",
     "Features",
     "Fixes",
