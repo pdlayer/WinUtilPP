@@ -42,11 +42,19 @@ jobs:
         shell: pwsh
         run: |
           $tag = $env:VERSION
-          if (git tag -l $tag) {
-            Write-Host "Tag $tag already exists, reusing it"
+          # The tag is named after the day, so a second push on the same day finds it already
+          # pointing at the previous commit. Re-pushing it as-is is rejected, and silently
+          # reusing it would publish a release whose tag is not this build.
+          if (git ls-remote --tags origin "refs/tags/$tag") {
+            Write-Host "Tag $tag already exists, moving it to this commit"
+            git tag -f $tag
           } else {
             git tag $tag
-            git push origin $tag
+          }
+          git push origin --force "$tag"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Failed to push tag $tag"
+            exit 1
           }
 
       - name: Create and Upload Release
