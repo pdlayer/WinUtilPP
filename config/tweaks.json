@@ -1904,6 +1904,15 @@
     "ButtonWidth": "300",
     "link": "https://winutil.christitus.com/code-reference/tweaks/performance-plans---not-for-laptops/removeultperf"
   },
+  "WPFManagePowerPlans": {
+    "Content": "Power Plans - Manage",
+    "Description": "Opens a window listing every power plan on this machine, with the active one marked. Apply a plan, duplicate one under your own name, or delete a plan you added. The three plans Windows ships cannot be deleted.",
+    "category": "Performance Plans - NOT FOR LAPTOPS",
+    "panel": "2",
+    "Type": "Button",
+    "ButtonWidth": "300",
+    "link": "https://winutil.christitus.com/code-reference/tweaks/performance-plans---not-for-laptops/managepowerplans"
+  },
   "WPFTweaksGameDVR": {
     "Content": "Game DVR - Disable",
     "Description": "WARNING: Disables background recording and the capture pipeline entirely. Games you have already recorded stay on disk, and removing your Xbox library saves or uninstalling will re-enable some of this on the next sign-in.",
