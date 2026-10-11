@@ -1,0 +1,68 @@
+name: Release WinUtil
+
+# The fork publishes a real (non-prerelease) release on every push to main, because
+# https://pdlayer.com/win resolves releases/latest, and GitHub's "latest" excludes
+# prereleases. A prerelease would publish a winutil.ps1 that the site never serves.
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v7
+
+      - name: Compile project
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; ./Compile.ps1
+        continue-on-error: false
+
+      - name: Set version
+        id: version
+        shell: pwsh
+        run: |
+          $date = Get-Date -Format 'yy.MM.dd'
+          "VERSION=$date" >> $env:GITHUB_ENV
+          "version=$date" >> $env:GITHUB_OUTPUT
+
+      - name: Create tag
+        shell: pwsh
+        run: |
+          $tag = $env:VERSION
+          if (git tag -l $tag) {
+            Write-Host "Tag $tag already exists, reusing it"
+          } else {
+            git tag $tag
+            git push origin $tag
+          }
+
+      - name: Create and Upload Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: WinUtil++ ${{ steps.version.outputs.version }}
+          body: |
+            Fork build of Chris Titus Tech's WinUtil, targeting Windows 11 26H2.
+
+            Install with:
+            ```powershell
+            irm https://pdlayer.com/win | iex
+            ```
+          append_body: false
+          files: ./winutil.ps1
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
